@@ -229,21 +229,20 @@ export default function(model) {
   }
 
 
-  function formatFile(file) {
+  function formatFile({
+    state
+  }) {
+
+    const file = findFile(state, state.selected)
 
     const format = file.formatter === 'function'
       ? file.formatter
       : formatters[file.formatter]
 
 
-    console.log(format)
-    if (!format) {
-      return {
-        name: file.name,
-        type: file.type,
-        content: file.content
-      }
-    }
+    if (!format)
+      return file
+
 
     const cursor = file.doc.cm.getCursor()
 
@@ -252,12 +251,15 @@ export default function(model) {
       if (result.error)
         consoleOutput(result.error)
 
-      console.log('here', result.code)
-
       // Probably better to use Code Mirror's replaceRange
+      // Resetting value suffices for now
       file.doc.cm.setValue(result.code)
       file.doc.cm.setCursor(cursor)
 
+      // Re-assign file.content
+      file.content = result.code
+
+      return getContent(file)
 
     }).catch(err => {
       consoleOutput({
@@ -265,11 +267,9 @@ export default function(model) {
         type: 'error',
         stack: []
       })
-      return {
-        name: file.name,
-        type: file.type,
-        content: file.content
-      }
+
+      return file
+
     })
 
   }
@@ -281,10 +281,11 @@ export default function(model) {
       : compilers[file.compiler || ext(file.name)]
 
     if (!compile) {
+
       return {
-        name: file.name,
-        type: file.type,
-        content: file.content
+        name:file.name,
+        type:file.type,
+        content:file.content
       }
     }
 
@@ -294,7 +295,7 @@ export default function(model) {
         consoleOutput(result.error)
 
       if (result.map)
-        file.map = result.map
+       map = result.map
 
       return {
         name: file.name,
@@ -303,14 +304,16 @@ export default function(model) {
       }
     }).catch(err => {
       consoleOutput({
-        content: ['Error compiling ' + file.compiler + ':', inspect(err)],
+        content: ['Error compiling ' +file.compiler + ':', inspect(err)],
         type: 'error',
         stack: []
       })
+
+
       return {
-        name: file.name,
-        type: file.type,
-        content: file.content
+        name:file.name,
+        type:file.type,
+        content:file.content
       }
     })
   }
@@ -451,7 +454,6 @@ export default function(model) {
     model.hasChanges = false
     model.loading = true
     model.console.clearOnNext = true
-
 
     Promise.all(model.state.files.map(getContent))
     .then(reloadIframe)
