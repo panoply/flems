@@ -1,6 +1,7 @@
 import m from 'mithril'
 import inspect from 'object-inspect'
 import compilers from './compilers'
+import formatters from './formatters'
 import { ext, findFile } from './utils'
 import { sanitize, createFlemsIoLink } from './state'
 import { diff, patch } from './dmp'
@@ -10,6 +11,7 @@ const firefox = navigator.userAgent.indexOf('Firefox') !== -1
 
 export default function(model) {
   let resizeTimer = null
+    , formatTimer = null
     , debounceTimer = null
     , iframeState = []
 
@@ -19,7 +21,7 @@ export default function(model) {
   model.selected.map(s => model.state.selected = s.url || s.name)
 
   const actions = {
-    onchange      : () => { /* no-op */ },
+    onchange      : () => { },
     setMiddle     : size => model.state.middle = size,
     toggleConsole : change(hide => model.state.console = model.state.console === true ? 'collapsed' : true),
     resetSize     : change(() => actions.setMiddle(50)),
@@ -44,6 +46,7 @@ export default function(model) {
     clearErrors,
     clearLogs,
     fileChange,
+    formatFile,
     initIframe,
     setState,
     resizing,
@@ -56,6 +59,7 @@ export default function(model) {
   getLinks()
 
   return actions
+
 
   function getLinks() {
     Promise.all(model.state.links.map(getLink)).then(() =>
@@ -224,19 +228,68 @@ export default function(model) {
     }, '*')
   }
 
-  function getContent(file) {
-    const compile = file.compiler === 'function'
-      ? file.compiler
-      : compilers[file.compiler || ext(file.name)]
 
-    if (!compile)
+  function formatFile(file) {
+
+    const format = file.formatter === 'function'
+      ? file.formatter
+      : formatters[file.formatter]
+
+
+    console.log(format)
+    if (!format) {
       return {
         name: file.name,
         type: file.type,
         content: file.content
       }
+    }
+
+    const cursor = file.doc.cm.getCursor()
+
+    return format(file).then(result => {
+
+      if (result.error)
+        consoleOutput(result.error)
+
+      console.log('here', result.code)
+
+      // Probably better to use Code Mirror's replaceRange
+      file.doc.cm.setValue(result.code)
+      file.doc.cm.setCursor(cursor)
+
+
+    }).catch(err => {
+      consoleOutput({
+        content: ['Error formatting ' + file.formatter + ':', inspect(err)],
+        type: 'error',
+        stack: []
+      })
+      return {
+        name: file.name,
+        type: file.type,
+        content: file.content
+      }
+    })
+
+  }
+
+  function getContent(file) {
+
+    const compile = file.compiler === 'function'
+      ? file.compiler
+      : compilers[file.compiler || ext(file.name)]
+
+    if (!compile) {
+      return {
+        name: file.name,
+        type: file.type,
+        content: file.content
+      }
+    }
 
     return compile(file).then(result => {
+
       if (result.error)
         consoleOutput(result.error)
 
@@ -302,7 +355,10 @@ export default function(model) {
     model.console.output.push(data)
   }
 
+
+
   function fileChange(file, content, selections) {
+
     if (file.url)
       file.patched = content
     else
@@ -312,9 +368,19 @@ export default function(model) {
       file.selections = selections === '0:0' ? undefined : selections
 
     typeof actions.onload === 'function' && actions.onload()
-    refreshFile(file)
+
+    // TEMP
+    // - Proof of concept #1
+    // Executes prettydiff format after 2 seconds
+    // MAKES EDITOR UN-WORKABLE
+
+    // clearTimeout(formatTimer)
+    // formatTimer = setTimeout(() => formatFile(file), 2000)
+
     changed()
+
   }
+
 
   function refreshFile(file) {
     clearTimeout(debounceTimer)
@@ -376,6 +442,8 @@ export default function(model) {
     }, 1000)
   }
 
+
+
   function refresh(options = {}) {
     if (!options.force && !model.state.autoReload)
       return model.hasChanges = true
@@ -384,10 +452,13 @@ export default function(model) {
     model.loading = true
     model.console.clearOnNext = true
 
-    Promise.all(model.state.files.map(getContent)).then(reloadIframe)
 
+    Promise.all(model.state.files.map(getContent))
+    .then(reloadIframe)
     m.redraw()
   }
+
+
 
   function reloadIframe(files) {
     if (!model.iframe) // HACK - find proper fix - safari calls reloadIframe before initIframe
@@ -396,7 +467,11 @@ export default function(model) {
     if (firefox)
       model.iframe.src += '?'
 
+
     iframeState = files
+
     model.iframe.src = model.runtimeUrl
+
+
   }
 }
