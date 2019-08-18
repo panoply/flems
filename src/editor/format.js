@@ -2,53 +2,40 @@ import m from 'mithril'
 import b from 'bss'
 
 import icon from '../components/icon'
-import lockIcon from '../icons/lock.svg'
+import toolbarButton from '../components/toolbarbutton'
 
-export default (model, actions) =>
-  m('.button'
-    + b
-      .position('relative')
-      .f('right')
-      .c('gray')
-      .w('100%')
-      .textAlign('right')
-      .minHeight(model.toolbar())
-      .background('transparent')
-      .fontSize(14)
-      .zi(20)
+import formatIcon from '../icons/format.svg'
+import gearsIcon from '../icons/gears.svg'
 
-  ,
-    m('.format'
-      +
-      b.position('absolute')
-        .right(0)
-    ,
-       runFormat(model, actions)
-    )
-  )
-
+export default (model, actions) => m('.format' + b
+  .position('absolute')
+  .d('block')
+  .t(model.toolbar() + 5)
+  .h(32)
+  .w(32)
+  .right(0)
+  .cursor('pointer'),
+    runFormat(model, actions)
+)
 
 function runFormat(model, actions) {
   return model.state.files.map(file =>
-
-    m('button' +
-    b
-    .p('relative')
-    .d('block')
-    .p(7, 10)
-    .c('hotpink')
-    .fw('600')
-    .cursor('pointer')
-    .$hover(`
-        color: gray;
-    `)
-    ,
-     {
-       onclick: () => actions.formatFile(file)
-     }, 'PRETTY DIFF'
+      m('.icon' + b
+      .d('block')
+      .position('relative')
+      .zi(30)
+      .borderRadius(1)
+      .c('gray')
+      .$hover(
+        b.c('white')
+      ),
+      icon({
+        onclick: () => actions.formatFile(file),
+        size: 32,
+        class: b.p(5).d('block').class
+      }, formatIcon)
     )
   )
-
 }
 
 
