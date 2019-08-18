@@ -43,6 +43,27 @@ export const memoize = (fn, cache = {}) => item =>
     ? cache[item]
     : cache[item] = fn(item)
 
+
+/**
+ * Downloads and caches scripts on demand asychronously
+ *
+ * @param {string=} type Script type, used `onerror` only.
+ * @param {string} url The `https://`  script URL
+ */
+export const load = (type = 'compiler', url) => memoize(url =>
+  new Promise((resolve, reject) => {
+    const el = document.createElement('script')
+    el.async = false
+    el.charset = 'utf-8'
+    el.src = url
+    document.body.appendChild(el)
+    el.onload = resolve
+
+    // eslint-disable-next-line
+    el.onerror = err => reject('Could not load ' + type + ' from: ' + url)
+  })
+)
+
 export function toposort(edges) {
   return topo(uniqueNodes(edges), edges)
 }
@@ -79,7 +100,7 @@ function topo(nodes, edges) {
     }
 
     if (!(node in nodesHash))
-      throw new Error('Found unknown node. Make sure to provided all involved nodes. Unknown node: '+JSON.stringify(node))
+      throw new Error('Found unknown node. Make sure to provided all involved nodes. Unknown node: ' + JSON.stringify(node)) // eslint-disable-line
 
     if (visited[i])
       return
