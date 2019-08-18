@@ -26,7 +26,7 @@ export const defaults = () => ({
   editable      : true,
   toolbar       : true,
   fileTabs      : true,
-  formatButton  : true, // Addition
+  formatting    : true, // Addition
   linkTabs      : true,
   shareButton   : true,
   reloadButton  : true,
@@ -37,13 +37,16 @@ export const defaults = () => ({
   scroll        : null,
   files : [{
     name: '.html',
-    content: ''
+    content: '',
+    formatter: '' // js-beautify, prettydiff or prettier
   }, {
     name: '.js',
-    content: ''
+    content: '',
+    formatter: '' // js-beautify, prettydiff or prettier
   }, {
     name: '.css',
-    content: ''
+    content: '',
+    formatter: '' // js-beautify, prettydiff or prettier
   }],
   links : []
 })
