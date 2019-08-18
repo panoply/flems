@@ -3,17 +3,22 @@ import { ext, urlRegex, findFile } from './utils'
 import compilers from './compilers'
 
 const extMap = {
-  html      : 'document',
-  js        : 'script',
-  ts        : 'script',
-  ls        : 'script',
-  coffee    : 'script',
-  sibilant  : 'script',
-  css       : 'style',
-  styl      : 'style',
-  less      : 'style',
-  scss      : 'style',
-  sass      : 'style'
+  html             : 'document',
+  js               : 'script',
+  ts               : 'script',
+  ls               : 'script',
+  coffee           : 'script',
+  sibilant         : 'script',
+  json             : 'script',
+  css              : 'style',
+  styl             : 'style',
+  less             : 'style',
+  scss             : 'style',
+  sass             : 'style',
+
+  'prettierc'      : 'script',
+  'prettdiffrc'    : 'script',
+  'jsbeautifyrc'   : 'script'
 }
 
 export const defaults = () => ({
@@ -35,19 +40,38 @@ export const defaults = () => ({
   autoFocus     : false,
   autoHeight    : false,
   scroll        : null,
-  files : [{
+  files : [
+    {
     name: '.html',
     content: '',
-    formatter: '' // js-beautify, prettydiff or prettier
-  }, {
-    name: '.js',
-    content: '',
-    formatter: '' // js-beautify, prettydiff or prettier
-  }, {
-    name: '.css',
-    content: '',
-    formatter: '' // js-beautify, prettydiff or prettier
-  }],
+    formatter: 'prettydiff'
+    },
+    {
+      name: '.js',
+      content: '',
+      formatter: 'prettydiff'
+    },
+    {
+      name: '.css',
+      content: '',
+      formatter: ''
+    },
+    {
+      name: '.prettydiffrc',
+      formatter: 'prettydiff',
+      content: `{}`
+    },
+    {
+      name: '.jsbeautifyrc',
+      formatter: 'prettydiff',
+      content: `{}`
+    },
+    {
+      name: '.prettierrc',
+      formatter: 'prettydiff',
+      content: `{}`
+    }
+  ],
   links : []
 })
 
