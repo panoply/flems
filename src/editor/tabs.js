@@ -3,6 +3,7 @@ import b from 'bss'
 
 import icon from '../components/icon'
 import lockIcon from '../icons/lock.svg'
+import { rcfiles } from '../format/presets'
 
 export default (model, actions) =>
   m('nav.toolbar'
@@ -71,7 +72,7 @@ function linkTabs(model, actions) {
 
 function fileTabs(model, actions) {
   return model.state.files.map(file =>
-    tab(
+    !rcfiles.includes(file.name) && tab(
       m('div' + b.d('flex'),
         file.name,
         file.editable === false && icon({ size: 16, class: b.ml(6).class }, lockIcon)
@@ -83,7 +84,7 @@ function fileTabs(model, actions) {
   )
 }
 
-function tab(title, onclick, selected, model) {
+export function tab(title, onclick, selected, model) {
   return m('.tab' + b
     .d('flex')
     .ai('center')
