@@ -1,6 +1,6 @@
 import m from 'mithril'
 import b from 'bss'
-
+import { findFile } from '../utils'
 import icon from '../components/icon'
 import toolbarButton from '../components/toolbarbutton'
 
@@ -19,22 +19,22 @@ export default (model, actions) => m('.format' + b
 )
 
 function runFormat(model, actions) {
-  return model.state.files.map(file =>
-      m('.icon' + b
-      .d('block')
-      .position('relative')
-      .zi(30)
-      .borderRadius(1)
-      .c('gray')
-      .$hover(
-        b.c('white')
-      ),
-      icon({
-        onclick: () => actions.formatFile(file),
-        size: 32,
-        class: b.p(5).d('block').class
-      }, formatIcon)
-    )
+
+  return m('.icon' + b
+    .d('block')
+    .position('relative')
+    .zi(30)
+    .borderRadius(1)
+    .c('gray')
+    .$hover(
+      b.c('white')
+    ),
+    icon({
+      onclick: () => actions.formatFile(model),
+      size: 32,
+      class: b.p(5).d('block').class
+    }, formatIcon)
+
   )
 }
 
