@@ -26,6 +26,7 @@ export const defaults = () => ({
   editable      : true,
   toolbar       : true,
   fileTabs      : true,
+  formatButton  : true, // Addition
   linkTabs      : true,
   shareButton   : true,
   reloadButton  : true,
@@ -63,6 +64,7 @@ export function sanitize(state) {
 
     if (typeof f.compiler === 'string' && !(f.compiler in compilers))
       throw new Error('Unknown compler: ' + f.compiler)
+
   })
 
   state.files.reduce((acc, f) => {
@@ -98,7 +100,7 @@ function clean(state) {
   , {})
 
   if (state.files && state.files.length)
-    clean.files = pluck(state.files, ['name', 'content', 'compiler', 'selections'])
+    clean.files = pluck(state.files, ['name', 'content', 'compiler', 'selections', 'formatter'])
 
   if (state.links)
     clean.links = pluck(state.links, ['name', 'url', 'type', 'patches', 'selections'])
