@@ -12,20 +12,18 @@
 <body>
   <script type="text/javascript" charset="utf-8">
     window.Flems(document.body, {
-    "selected": ".scss",
     "files": [
     {
         name: 'app.js',
+        formatter: 'prettydiff',
         content: `
-async function wat() {
-    return await import('./comp.js')
-}
+          async function wat
+           () {
+              return   await 'hello'
+          }
 
-wat().then(p)
+          wat()   .then(p)
         `
-    }, {
-        name: 'comp.js',
-        content: 'export default 45'
     }]
 }, 'runtime.html')
   </script>
