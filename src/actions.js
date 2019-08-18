@@ -14,7 +14,7 @@ export default function(model) {
     , debounceTimer = null
     , iframeState = []
 
-  const changed = () => actions.onchange(model.state)
+  const changed = () => actions.onchange(model.state) // eslint-disable-line
       , change = fn => value => (fn(value), changed())
 
   model.selected.map(s => model.state.selected = s.url || s.name)
@@ -119,15 +119,23 @@ export default function(model) {
   function onConsoleKeyDown(e) {
     if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey && !e.altKey) {
       e.preventDefault()
-      model.console.output.push({ type: 'input', content: ['> ' + model.console.input], number: 'i' + model.console.inputNumber++ })
+      model.console.output.push({
+        type: 'input', content: ['> ' + model.console.input],
+        number: 'i' + model.console.inputNumber++
+      })
       if (model.console.input.indexOf('console.clear()') === 0)
         clearConsole()
       evaluate()
       return false
-    } else if ((e.key === 'ArrowUp' || e.keyCode === 38) && (model.console.historyNavigated || e.target.selectionStart === 0)) {
+    } else if (
+      (e.key === 'ArrowUp' || e.keyCode === 38) &&
+      (model.console.historyNavigated || e.target.selectionStart === 0)
+    ) {
       e.preventDefault()
       consoleHistoryBack()
-    } else if ((e.key === 'ArrowDown' || e.keyCode === 40) && (model.console.historyNavigated || model.console.input === '')) {
+    } else if (
+      (e.key === 'ArrowDown' || e.keyCode === 40) &&
+      (model.console.historyNavigated || model.console.input === '')) {
       e.preventDefault()
       consoleHistoryForward()
     } else {
