@@ -11,7 +11,6 @@ const firefox = navigator.userAgent.indexOf('Firefox') !== -1
 
 export default function(model) {
   let resizeTimer = null
-    , formatTimer = null
     , debounceTimer = null
     , iframeState = []
 
@@ -21,7 +20,7 @@ export default function(model) {
   model.selected.map(s => model.state.selected = s.url || s.name)
 
   const actions = {
-    onchange      : () => { },
+    onchange      : () => { /* no-op */ },
     setMiddle     : size => model.state.middle = size,
     toggleConsole : change(hide => model.state.console = model.state.console === true ? 'collapsed' : true),
     resetSize     : change(() => actions.setMiddle(50)),
@@ -45,8 +44,8 @@ export default function(model) {
     setShareUrl,
     clearErrors,
     clearLogs,
-    fileChange,
     formatFile,
+    fileChange,
     initIframe,
     setState,
     resizing,
@@ -59,7 +58,6 @@ export default function(model) {
   getLinks()
 
   return actions
-
 
   function getLinks() {
     Promise.all(model.state.links.map(getLink)).then(() =>
@@ -228,13 +226,9 @@ export default function(model) {
     }, '*')
   }
 
-
-  function formatFile({
-    state
-  }) {
+  function formatFile({ state }) {
 
     const file = findFile(state, state.selected)
-
     const format = file.formatter === 'function'
       ? file.formatter
       : formatters[file.formatter]
@@ -275,27 +269,24 @@ export default function(model) {
   }
 
   function getContent(file) {
-
     const compile = file.compiler === 'function'
       ? file.compiler
       : compilers[file.compiler || ext(file.name)]
 
     if (!compile) {
-
       return {
-        name:file.name,
-        type:file.type,
-        content:file.content
+        name: file.name,
+        type: file.type,
+        content: file.content
       }
     }
 
     return compile(file).then(result => {
-
       if (result.error)
         consoleOutput(result.error)
 
       if (result.map)
-       map = result.map
+        file.map = result.map
 
       return {
         name: file.name,
@@ -304,16 +295,14 @@ export default function(model) {
       }
     }).catch(err => {
       consoleOutput({
-        content: ['Error compiling ' +file.compiler + ':', inspect(err)],
+        content: ['Error compiling ' + file.compiler + ':', inspect(err)],
         type: 'error',
         stack: []
       })
-
-
       return {
-        name:file.name,
-        type:file.type,
-        content:file.content
+        name: file.name,
+        type: file.type,
+        content: file.content
       }
     })
   }
@@ -358,10 +347,7 @@ export default function(model) {
     model.console.output.push(data)
   }
 
-
-
   function fileChange(file, content, selections) {
-
     if (file.url)
       file.patched = content
     else
@@ -371,19 +357,9 @@ export default function(model) {
       file.selections = selections === '0:0' ? undefined : selections
 
     typeof actions.onload === 'function' && actions.onload()
-
-    // TEMP
-    // - Proof of concept #1
-    // Executes prettydiff format after 2 seconds
-    // MAKES EDITOR UN-WORKABLE
-
-    // clearTimeout(formatTimer)
-    // formatTimer = setTimeout(() => formatFile(file), 2000)
-
+    refreshFile(file)
     changed()
-
   }
-
 
   function refreshFile(file) {
     clearTimeout(debounceTimer)
@@ -445,8 +421,6 @@ export default function(model) {
     }, 1000)
   }
 
-
-
   function refresh(options = {}) {
     if (!options.force && !model.state.autoReload)
       return model.hasChanges = true
@@ -455,12 +429,10 @@ export default function(model) {
     model.loading = true
     model.console.clearOnNext = true
 
-    Promise.all(model.state.files.map(getContent))
-    .then(reloadIframe)
+    Promise.all(model.state.files.map(getContent)).then(reloadIframe)
+
     m.redraw()
   }
-
-
 
   function reloadIframe(files) {
     if (!model.iframe) // HACK - find proper fix - safari calls reloadIframe before initIframe
@@ -469,11 +441,7 @@ export default function(model) {
     if (firefox)
       model.iframe.src += '?'
 
-
     iframeState = files
-
     model.iframe.src = model.runtimeUrl
-
-
   }
 }
