@@ -4,6 +4,10 @@ import collapsed from '../components/collapsed'
 import editIcon from '../icons/edit.svg'
 import handle from './handle'
 
+// Temp
+import format from './format'
+
+
 export default (model, actions) =>
   [
     (model.vertical() && model.editor
@@ -11,6 +15,7 @@ export default (model, actions) =>
       : model.state.middle < 3
     ) && collapsed(editIcon, actions.resetSize),
     model.state.toolbar && tabs(model, actions),
+    format(model, actions),
     editor(model, actions),
     model.state.resizeable && handle(model, actions)
   ]
