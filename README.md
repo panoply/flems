@@ -36,9 +36,9 @@ Users will have the option to use a formatting extension to beautify their flems
 - [PrettyDiff](http://prettydiff.com)
 - [JS Beautify](https://beautifier.io)
 
-Extensions can be applied on a per-language basis. The goal here is to provide multiset formatting so your flems module. For example, lets say you are working with a flems that has HTML, TypeScript, JavaScript, CSS and SCSS files. At very little cost you could use Prettier to format HTML `.html` and TypeScript `ts` files, PrettyDiff to format CSS/SCSS `.css, .scss` files and JS Beautify to format JavaScript `.js` and Prettier files.
+Extensions can be applied on a per-language basis. The goal here is to provide multiset formatting to your flems module. For example, lets say you are working with a flems that has HTML, TypeScript, JavaScript, CSS and SCSS files. At very little cost you could use Prettier to format HTML (`.html`) and TypeScript (`ts`) files, PrettyDiff to format CSS/SCSS (`.css .scss`) files and JSBeautify to format JavaScript `.js` files.
 
-Custom rules and code style preferences will be saved to local storage, so given you don't empty Local Storage your custom formatting rules will be loaded each time you start a flems. Additonally, when saving a flems module (downloading) extension formatting rules will be exported as in relative `.rc` file type JSON form.
+Custom rules and code style preferences will be saved to local storage, so given you don't empty local storage your custom formatting rules will be loaded each time you start a flems. Additonally, when saving a flems module (downloading) extension formatting rules will be exported as there relative `.rc` file type in JSON form.
 
 # Ideas
 These are features I'd like to explore and may attempt at implementing.
