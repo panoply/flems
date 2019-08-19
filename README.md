@@ -1,145 +1,91 @@
-# Flems 
+# Fork Overview
+This fork is an active WIP which aims to implement features to flems. The features here are not planned and still need to be considered/reviewed by [Porsager](https://github.com/porsager).
 
-> As seen on [Flems.io](https://flems.io)
+## In Progress
+These features are currently in progress and under development but are yet to be considered or reviewed.
 
-Flems is a static web app - no strings attached - browser code playground.
-It's great for documentation, examples, presentations, issues and what not.
+### Formatting
+- Supports Prettier, JS Beautify and PrettyDiff rules (In Progress)
+- Format configuration UI Component
+- Format Toggle Button
+- Format key binding (cmd-shift-f)
+- Auto formatting (Executes format in 5 second intervals)
 
-<p align="center">
-    <a href="https://flems.io">
-        <img src="https://a.flems.io/intro.gif" alt="Flems example">
-    </a>
-</p>
+#### Default
+By default, formatting is applied according to the universal [EditorConfig](https://editorconfig.org/) specification. When saving a flems module (downloading), the default rules will be exported as`.editorconfig` file.
 
-## Getting started
-Just load a single file [`flems.html`](https://flems.io/flems.html) in a script tag to get started. - [why should i load an .html file as a script tag?](#html-script-tag)
+#### Extensions
+Users will have the option to use a formatting extension. The supported formatting extensions are:
 
-``` html
-<script src="https://flems.io/flems.html" type="text/javascript" charset="utf-8"></script>
-<script>
-Flems(document.body, {
-    files: [{
-        name: 'app.js',
-        content: 'm.render(document.body, m("h1", "Hello world"))'
-    }],
-    links: [{
-        name: 'mithril',
-        type: 'script',
-        url: 'https://unpkg.com/mithril'
-    }]
-})
-</script>
-```
+- [Prettier](https://prettier.io)
+- [PrettyDiff](http://prettydiff.com)
+- [JS Beautify](https://beautifier.io)
 
-[Flems.io of the above](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcIB0ALeBbKIANCAGYCWMYaA2qAHYCGuEamO+RIsA9nYn6wA8WAIwA+ADp0ABNIAqWMmGlLpAMRi4wUwQHpRkuoKRkAbiqQBeCaU3aQhvSdOOADodkaIWlcogMwCgBPaW8AI2QkZBUZJG5YAFdmPgZ4Ml5Q+FgMHJ1ddx0wWAAnMld4aTBi2GsQHHhXMFRdXToIAA94DBI7DHTdHu8wbDwoG2l4INcIWsRO3QArBlMAkrL4cdgsBmLIeFqE+BIAWgAOGzE9ItLyx2v1sWkpWVkAdzI6ONeMLy0ACkGWkI0mAzxe4PIlFQ0loYPB8OkjGY0IA5AxXK4MAswCjCHCES8eHwIHxUbgMMUSVFin8JFI6fA4olkl0wtwkEE8fSJHhaXURDZgTYABLQKDcaSvbjFKBIGwASjpdHlKPx4IAvgBdPEyAlQD4AayaMNBuoJLyREDJZHgWFKUFxaoJk2mqOxjrN5ukCRlqPqjWaugSdFcBoA5hgeLhdLgbXaKKrPRrNfj1YqjLp7rcQOrCPQmCx0FiqMQifx4Kwc3mQJbWJGwCWuLxy6xRMDXCCwbgdmGPsd4NxXNCAMwABlc7QA3GC5vBjgx9WG6NDYCTEMVp7qSM3jiQmMFoWAGHQwMdIKUSJv1fS6ABiQHKU2ybvFXvL6QAJnH7WkABZv5ushYBAZBhjg0L-gBYJsu0Z7bF80KjtISFfhO0ivmEDB-KOhA4ThGDDgArOm6o5pq6pAA)
+Extension can be applied on a per-language basis. The goal here is to provide multiset formatting so your flems module could (for example) use Prettier to format HTML (.html), PrettyDiff to format CSS/SCSS (.css, .scss) and JS Beautify to format JavaScript/Typescript (.ts, .js) files.
 
-## Contents
+> Extensions will respect and adhere to the default `.editorconfig` settings.
 
-Content is added to the `files` and `links` arrays in options. 
+Additonally, when saving a flems module (downloading) the extension formatting rules will be exported as relative`.rc` file type.
 
-## `.files`
-The files array should contains objects with the following structure
-```js
-{
-    name        : String, 
-    compiler    : String | Function,
-    content     : String
-}
-```
-The following extensions are handled for files (others are ignored)
-- `.html` - Only the first html file is used (others are ignored)
-- `.js`
-- `.css`
-- `.ts` - Will be compiled by typescript
-- `.ls` - Will be compiled by livescript
+## Ideas
+These are features I'd like to explore and may attempt at implementing.
 
-The following compilers are currently only avaible for js files:
-- `ts` (typescript)
-- `ls` (livescript)
-- `babel`
+### Supporting Markdown files
+Seems fairly easy to do, would be a great feature.
 
-It is also possible to supply a function that receives the file and returns a promise which resolves to an object with `code` and `map` eg.
-```js
-function compile(file) {
-    return new Promise(resolve => {
-        return {
-            code: file.content.replace(/var /g, 'const '), // Don't do this
-            map: null // The JSON for a sourcemap
-        }
-    })
-}
-```
+**Ideas**
+- Prevent importing from `.md` file types
+- Supporting Markdown styles (Github, Gitlab etc)
+-
 
-## `.links`
-The links array should contain objects with the following structure
-```js
-{
-    name        : String,
-    type        : String, // js | css
-    url         : String
-}
-```
-If the url supports CORS, Flems will open files shorther than 200.000 chars in the editor, if not they'll simply be linked to.
+### Supporting YAML and TOML file types
+Supporting both these files types might prove to be helpful for many users.
 
-## Options
+**Ideas**
+- Parse YAML and TOML files into JavaScript objects so as to use them as data sources and include them with `import`
 
-Flems is customizable to fit your need. If you don't want the toolbar or don't care for console output you can easily hide that away. The following options with their defaults are available:
 
-```js
-{
-    middle        : 50,
-    selected      : '.js',
-    color         : 'rgb(38,50,56)',
-    theme         : 'material', // and 'none' or 'default'
-    resizeable    : true,
-    editable      : true,
-    toolbar       : true,
-    fileTabs      : true,
-    linkTabs      : true,
-    shareButton   : true,
-    reloadButton  : true,
-    console       : true,
-    autoReload    : true,
-    autoHeight    : false
-}
-```
+### Leveraging Local Storage
+Allowing users to save their flem modules and settings to localstorage.
 
-## Methods
+#### Ideas
+A `Modules` Section, which could save upto 5mb of flems URL references within LocalStorage.
 
-There are a few methods exposed to control the Flems runtime:
+**Modules section**
+- Projects Panel
+    - Lists all saved flems modules existing in localstorage
+    - Provides functionality to export (download) any previously saved flems
+    - Provides remove/clean functionality of saved flems
+- Format Settings Panel
+    - Formatting configurations to use creating a flems module
 
-### `.reload()`
-Reloads the runtime page
+**Additional Features**
+- Notification warning when storages start to approach 5mb limit
 
-### `.focus()`
-Set focus in the editor for the currently selected file
+### Flems Badge
+Support flems badge which links to a flems module so users can reference and refer a flems example to showcase a project. Useful for Github Repositories.
 
-## Bundling Flems
+### Intellisense / Auto-Complete / Snippets
+Anyone one of these 3 could be helpful and faily easy to integrate.
 
-Bundling Flems doesn't really make sense. Flems uses an `iframe` as a runtime that needs to be pointed at a URL containing specific code. This is currently done by using the included script both as the required module `Flems` and as the `html` file src for the iframe. If for some reason you'd still want to bundle Flems, be aware you'll either need to make the same setup or point to a Flems specific `runtime.html` file resulting in the same amount of requires. Feel free to create an [issue](https://github.com/porsager/flems/issues) if you need some pointers for doing that.
+### Straps
+Provide a list of common boileplate started projects to help users launch a quick start flems with all their favourite dependencies and settings.
 
-## Tools used to build Flems
+Think of strap like a CLI Yeoman command, you call them and they launch a ready flems module.
 
-### [Mithril](https://mithril.js.org)
-Mithril is one of few Javascript frameworks that embraces Javascript - the good parts, it's a small package of [8kb] with everything required to make your web app work.
+**Ideas**
+- `strap mithril`
+    - Loads latest mithril version
+    - Loads latest BSS
+    - Applies Minimal boilerplate
+    - Sets formatting rules to specific style
+    - Requires Babel
 
-### [BSS](https://github.com/porsager/bss)
-BSS is a css-in-js framework taking components to the extreme. No more defining intermediate class names for no reason, just focus on building your components using the javascript and the css properties you know. - The perfect companion for mithril.
+### Minified Export (Downloads)
+Could provide the option to export/download a minified production ready flems module.
 
-### [Wright](https://github.com/porsager/wright)
-Wright is a developmet environment taking away the hassle of setting up a dev server and running a live reload environment. It even hot reloads JS functions and CSS with no specific app modifications needed.
+**Ideas**
+- Apply PrettyDiff Minification on files before export
 
-### [CodeMirror](https://codemirror.net/)
-CodeMirror powers the editor in Flems, and ensures it works great on any device.
-
-### [Rollup](https://rollupjs.org/)
-Rollup is a module bundler for JavaScript which compiles small pieces of code into something larger and more complex, such as a library or application.
-
-## Html script tag
-
-To allow you to use Flems with only a single file to be required the javascript and the html for the iframe runtime has been merged into a single file disguised as `flems.html`. [It works](https://github.com/porsager/flems/blob/master/scripts/standalone.js) by having the javascript code contained in html comments and the html code contained in javascript comments. In that way if loaded like javascript the html is ignored and when loaded as html the javascript part is ignored.
-
-## Thanks
-
-The [mithril community](https://gitter.im/mithriljs/mithril.js) has been an amazing help and source for feedback - Thanks to all of you!
-
+### Formatting Playground
+Could explore expanding the formatting feature and create a formatting playground where users could test rules.
