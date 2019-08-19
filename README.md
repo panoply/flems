@@ -4,13 +4,14 @@ This fork is an active WIP which aims to implement features to flems. The featur
 ## In Progress
 These features are currently in progress and under development but are yet to be considered or reviewed.
 
-### Formatting
-- Supports Prettier, JS Beautify and PrettyDiff rules (In Progress)
+### Formatting (in progress)
+- Supports Prettier, JS Beautify and PrettyDiff rules
 - Format configuration UI Component
 - Format Toggle Button
 - Format key binding (cmd-shift-f)
 - Auto formatting (Executes format in 5 second intervals)
 - Saves custom set formatting options to LocalStorage
+- Formatting playground.
 
 ### How it works
 Beautification can be applied to the following language:
@@ -25,7 +26,6 @@ Beautification can be applied to the following language:
 
 > Formatting for CoffeeScript, Sibilant, SASS and Stylus are not supported by the extensions but will adhere to default rules.
 
-
 #### Default
 By default, formatting is applied according to the universal [EditorConfig](https://editorconfig.org/) specification. When saving a flems module (downloading), the default rules will be exported as`.editorconfig` file unless the module is using a formatter extension.
 
@@ -39,6 +39,19 @@ Users will have the option to use a formatting extension to beautify their flems
 Extensions can be applied on a per-language basis. The goal here is to provide multiset formatting to your flems module. For example, lets say you are working with a flems that has HTML, TypeScript, JavaScript, CSS and SCSS files. At very little cost you could use Prettier to format HTML (`.html`) and TypeScript (`ts`) files, PrettyDiff to format CSS/SCSS (`.css .scss`) files and JSBeautify to format JavaScript `.js` files.
 
 Custom rules and code style preferences will be saved to local storage, so given you don't empty local storage your custom formatting rules will be loaded each time you start a flems. Additonally, when saving a flems module (downloading) extension formatting rules will be exported as there relative `.rc` file type in JSON form.
+
+#### Formatting Playground
+Because we will store formatting rules to state and local storage we have access to the object configurations of each formatter and thus the users format setting preferences. With this data we can generate a formatting playground right within flems.
+
+- Conditionally check each formatters configuration option value and generate UI controls (radio, checkbox, input) based on their types.
+- Overlay the code editor (right) with formatting settings wich is populated by the generate UI controls. Optionally provide a formatting preview to the users.
+- Formatting preview will minimise the code preview iframe and push the current code editor contents (which formatting setting is currently overlaying) right making it visibile
+    - Formatting preview would require a minimum of 15 lines of code
+- The current code editor will clide
+- Users can play around with formatting options provided by the selected formatter by using the generated UI controls in the formatting settings overlay.
+- Changes to formatting options are synced to state and local-storage
+
+
 
 # Ideas
 These are features I'd like to explore and may attempt at implementing.
@@ -87,9 +100,6 @@ For example, a "Mithril Strap" could load the following:
 ## Minified Flems module export (Downloads)
 Could provide the option to export/download a minified production ready flems module.
 - Apply PrettyDiff Minification on files before export
-
-## Formatting Playground
-Could explore expanding the formatting feature and create a formatting playground where users could test format rules so to help them understand formatting terms visually.
 
 ## Intellisense / Auto-Complete / Snippets
 Anyone one of these 3 could be helpful and faily easy to integrate, I'm quite sure CodeMirror has it's own take on this but it puts weight on the end build, so probably best to skip.
