@@ -44,10 +44,10 @@ Custom rules and code style preferences will be saved to local storage, so given
 Because we will store formatting rules to state and local storage we have access to the object configurations of each formatter and thus the users format setting preferences. With this data we can generate a formatting playground right within flems.
 
 - Conditionally check each formatters configuration option value and generate UI controls (radio, checkbox, input) based on their types.
-- Overlay the code editor (right) with formatting settings wich is populated by the generate UI controls. Optionally provide a formatting preview to the users.
+- Overlay the code editor (right) with formatting settings which is populated by the generated UI controls.
+- Optionally provide a formatting preview to the users.
 - Formatting preview will minimise the code preview iframe and push the current code editor contents (which formatting setting is currently overlaying) right making it visibile
     - Formatting preview would require a minimum of 15 lines of code
-- The current code editor will clide
 - Users can play around with formatting options provided by the selected formatter by using the generated UI controls in the formatting settings overlay.
 - Changes to formatting options are synced to state and local-storage
 
