@@ -10,22 +10,35 @@ These features are currently in progress and under development but are yet to be
 - Format Toggle Button
 - Format key binding (cmd-shift-f)
 - Auto formatting (Executes format in 5 second intervals)
+- Saves custom set formatting options to LocalStorage
+
+### How it works
+Beautification can be applied to the following language:
+
+- HTML
+- JavaScript
+- TypeScript
+- LiveScript
+- CSS
+- SCSS
+- LESS
+
+> Formatting for CoffeeScript, Sibilant, SASS and Stylus are not supported by the extensions but will adhere to default rules.
+
 
 #### Default
-By default, formatting is applied according to the universal [EditorConfig](https://editorconfig.org/) specification. When saving a flems module (downloading), the default rules will be exported as`.editorconfig` file.
+By default, formatting is applied according to the universal [EditorConfig](https://editorconfig.org/) specification. When saving a flems module (downloading), the default rules will be exported as`.editorconfig` file unless the module is using a formatter extension.
 
 #### Extensions
-Users will have the option to use a formatting extension. The supported formatting extensions are:
+Users will have the option to use a formatting extension to beautify their flems files. The supported formatting extensions are:
 
 - [Prettier](https://prettier.io)
 - [PrettyDiff](http://prettydiff.com)
 - [JS Beautify](https://beautifier.io)
 
-Extension can be applied on a per-language basis. The goal here is to provide multiset formatting so your flems module could (for example) use Prettier to format HTML (.html), PrettyDiff to format CSS/SCSS (.css, .scss) and JS Beautify to format JavaScript/Typescript (.ts, .js) files.
+Extensions can be applied on a per-language basis. The goal here is to provide multiset formatting so your flems module. For example, lets say you are working with a flems that has HTML, TypeScript, JavaScript, CSS and SCSS files. At very little cost you could use Prettier to format HTML `.html` and TypeScript `ts` files, PrettyDiff to format CSS/SCSS `.css, .scss` files and JS Beautify to format JavaScript `.js` and Prettier files.
 
-> Extensions will respect and adhere to the default `.editorconfig` settings.
-
-Additonally, when saving a flems module (downloading) the extension formatting rules will be exported as relative`.rc` file type.
+Custom rules and code style preferences will be saved to local storage, so given you don't empty Local Storage your custom formatting rules will be loaded each time you start a flems. Additonally, when saving a flems module (downloading) extension formatting rules will be exported as in relative `.rc` file type JSON form.
 
 # Ideas
 These are features I'd like to explore and may attempt at implementing.
@@ -43,7 +56,7 @@ Supporting both these files types might prove to be helpful for many users.
 - Parse YAML and TOML files into JavaScript objects so as to use them as data sources and include them with `import`
 
 ## Leveraging Local Storage
-Allowing users to save their flem modules and settings to localstorage.
+Allowing users to save their flem modules and settings to localstorage (already trying this with the formatter feature).
 
 ## Modules section
 A `Modules` Section, which could save upto 5mb of flems URL references within LocalStorage.
