@@ -2,7 +2,7 @@ import lz from 'lz-string'
 import { ext, urlRegex, findFile } from './utils'
 import compilers from './compilers'
 
-const extMap = {
+export const extMap = {
   html             : 'document',
   js               : 'script',
   ts               : 'script',
@@ -14,11 +14,7 @@ const extMap = {
   styl             : 'style',
   less             : 'style',
   scss             : 'style',
-  sass             : 'style',
-
-  'prettierc'      : 'script',
-  'prettdiffrc'    : 'script',
-  'jsbeautifyrc'   : 'script'
+  sass             : 'style'
 }
 
 export const defaults = () => ({
@@ -31,7 +27,6 @@ export const defaults = () => ({
   editable      : true,
   toolbar       : true,
   fileTabs      : true,
-  formatting    : true, // Addition
   linkTabs      : true,
   shareButton   : true,
   reloadButton  : true,
@@ -40,36 +35,40 @@ export const defaults = () => ({
   autoFocus     : false,
   autoHeight    : false,
   scroll        : null,
+
+  // Additions
+  format        : true,
+  formatPreview : false,
+  formatting    : [
+    {
+      language: 'html',
+      use: '',
+      rules: {}
+    },
+    {
+      language: 'js',
+      use: '',
+      rules: {}
+    },
+    {
+      language: 'css',
+      use: '',
+      rules: {}
+    }
+  ],
+
   files : [
     {
-    name: '.html',
-    content: '',
-    formatter: 'prettydiff'
+      name: '.html',
+      content: ''
     },
     {
       name: '.js',
-      content: '',
-      formatter: 'prettydiff'
+      content: ''
     },
     {
       name: '.css',
-      content: '',
-      formatter: ''
-    },
-    {
-      name: '.prettydiffrc',
-      formatter: 'prettydiff',
-      content: `{}`
-    },
-    {
-      name: '.jsbeautifyrc',
-      formatter: 'prettydiff',
-      content: `{}`
-    },
-    {
-      name: '.prettierrc',
-      formatter: 'prettydiff',
-      content: `{}`
+      content: ''
     }
   ],
   links : []

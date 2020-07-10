@@ -22,37 +22,10 @@ import 'codemirror/addon/fold/xml-fold.js'
 import 'codemirror/addon/fold/comment-fold.js'
 
 import logoIcon from '../icons/logo.svg'
-import prettierIcon from '../icons/prettier.svg'
-import jsbeautifyIcon from '../icons/jsbeautify.svg'
-import prettydiffIcon from '../icons/prettydiff.svg'
-
-function bg(icon) {
-
-  const icons =  {
-    '.prettierrc': {
-      opacity: '0.125',
-      size: '80% auto',
-      image: btoa(prettierIcon)
-    },
-    '.jsbeautifyrc': {
-      opacity: '0.1',
-      size: '110% auto',
-      image: btoa(jsbeautifyIcon)
-    },
-    '.prettydiffrc': {
-      opacity: '0.1',
-      size: '100% auto',
-      image: btoa(prettydiffIcon)
-    }
-  }
-
-  return icons[icon] || {
-    opacity: '0.1',
-    size: '120% auto',
-    image: btoa(logoIcon)
-  }
-
-}
+// import prettierIcon from '../icons/prettier.svg'
+// import jsbeautifyIcon from '../icons/jsbeautify.svg'
+// import prettydiffIcon from '../icons/prettydiff.svg'
+// import editorconfigIcon from '../icons/editorconfig.svg'
 
 const modes = {
   document: {
@@ -74,10 +47,48 @@ const modes = {
 modes.js = modes.script
 modes.html = modes.document
 
-let bgIcon
+/**
+ * Used switch background code editor icons.
+ * Loads formatter icons in respective `rc` files.
+ *
+ * @param {string} image the image to load
+ */
+const background = (image) => {
+  return {
+    '.editorconfig': {
+      opacity: '0.125',
+      size: '40% auto',
+      image: btoa(logoIcon), // btoa(editorconfigIcon),
+      bottom: 40
+    },
+    '.prettierrc': {
+      opacity: '0.125',
+      size: '40% auto',
+      image: btoa(logoIcon), // btoa(prettierIcon),
+      bottom: 40
+    },
+    '.jsbeautifyrc': {
+      opacity: '0.1',
+      size: '50% auto',
+      image: btoa(logoIcon), // btoa(jsbeautifyIcon),
+      bottom: 40
+    },
+    '.prettydiffrc': {
+      opacity: '0.1',
+      size: '50% auto',
+      image:btoa(logoIcon), // btoa(prettydiffIcon),
+      bottom: 40
+    }
+  }[image] || {
+    opacity: '0.1',
+    size: '120% auto',
+    image: btoa(logoIcon),
+    bottom: 0
+  }
+}
 
-
-export default (model, actions) =>  m('div'
+export default (model, actions) =>
+  m('div'
   + b.position('absolute')
     .w('100%')
     .top(model.toolbar())
@@ -93,11 +104,13 @@ export default (model, actions) =>  m('div'
       .width('100%')
       .height('100vh')
       .zIndex(3)
-      .opacity(bg(model.state.selected).opacity)
+      .opacity(background(model.state.selected).opacity)
       .pointerEvents('none')
-      .backgroundImage('url(data:image/svg+xml;base64,' +
-        bg(model.state.selected).image + ')')
-      .backgroundSize(bg(model.state.selected).size)
+      .backgroundImage('url(data:image/svg+xml;base64,'
+      + // background(model.state.selected).image
+      btoa(logoIcon)
+      + ')')
+      .backgroundSize(background(model.state.selected).size)
       .backgroundRepeat('no-repeat')
       .backgroundPosition('center center')
     )
@@ -138,6 +151,11 @@ export default (model, actions) =>  m('div'
           'Cmd-L': false,
           'Cmd-M': false,
           'Ctrl-L': false,
+          'Cmd-Shift-F': cm => {
+
+            actions.formatFile(model)
+
+          },
           Enter: cm => {
             const cursor = cm.getCursor()
                 , line = cm.getRange({ line: cursor.line, ch: 0 }, cursor).trim()
@@ -194,8 +212,6 @@ export default (model, actions) =>  m('div'
         if (!file)
           return
 
-          cm.theme = file.theme
-
         const content = file.patched || file.content || ''
             , mode = modes[ext(file.name)] || modes[file.type] || 'javascript'
 
@@ -249,14 +265,16 @@ export default (model, actions) =>  m('div'
 
         if (!model.cmHeight && model.state.autoHeight) {
           requestAnimationFrame(() =>
-            model.cmHeight = dom.querySelector('.CodeMirror-sizer').offsetHeight * (model.vertical() ? 2 : 1) + (model.toolbar() * (model.vertical() ? 4 : 3))
+            model.cmHeight = dom.querySelector('.CodeMirror-sizer').offsetHeight
+            * (model.vertical() ? 2 : 1)
+            + (model.toolbar()
+            * (model.vertical() ? 4 : 3))
           )
         }
       })
 
     }
   })
-
 
 function selectLineNumber(cm, line, gutter, e) {
   if (gutter === 'CodeMirror-foldgutter')

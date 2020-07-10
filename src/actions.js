@@ -234,6 +234,13 @@ export default function(model) {
     }, '*')
   }
 
+  /**
+   * formats the contents of the active file, will load
+   * formatter on demand asynchronously.
+   *
+   * @param {object} state The model `state{}`
+   * @return {Promise<formatters>} Passes model to `getContent` function.
+   */
   function formatFile({ state }) {
 
     const file = findFile(state, state.selected)
@@ -241,10 +248,8 @@ export default function(model) {
       ? file.formatter
       : formatters[file.formatter]
 
-
     if (!format)
       return file
-
 
     const cursor = file.doc.cm.getCursor()
 
